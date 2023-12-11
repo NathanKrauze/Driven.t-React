@@ -1,16 +1,16 @@
-import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { toast } from 'react-toastify'
+import { useState } from "react";
+import ErrorMessage from "../../../components/ErrorMessage";
+import styled from 'styled-components';
 import useEnrollment from '../../../hooks/api/useEnrollment'
-import {useTypesOfTicket, postUserTickets} from "../../../hooks/api/useTypesOfTicket";
+import {useTypesOfTicket} from "../../../hooks/api/useTypesOfTicket";
 
 
 export default function Payment() {
  
  const { typesOfTickets } = useTypesOfTicket()
- const { postUserTicket } = postUserTickets();
+ 
 
- const [ticketTypeId, setTicketTypeId] = useState({});
+ 
  const [ticketPrice, setTicketPrice] = useState(0);
  const [isRemote, setIsRemote] = useState(false);
  const [isNotRemote, setIsNotRemote] = useState(false);
@@ -62,6 +62,136 @@ let result = {};
   };
 
  
-  return 'Pagamento: Em breve!';
+  return (
+    <>
+      <Title>Ingresso e pagamento</Title>
+      {enrollmentLoading ? (
+        'Loading...'
+      ) : !enrollment ? (
+        <ErrorMessage
+          error={'Para conseguir visualizar os ingressos, você deve completar sua'}
+        />
+      ) : (
+        <>
+          <TitleSec>Primeiro, escolha sua modalidade de ingresso</TitleSec>
+          <Ticket
+            onClick={() => selectRemoteorNot('Presencial')}
+          >
+            <p className="type">Presencial</p>
+            <p className="price">R$ {result.ticketWithoutHotel.price}</p>
+          </Ticket>
+          <Ticket
+            onClick={() => selectRemoteorNot('Online')}
+          >
+            <p className="type">Online</p>
+            <p className="price">R$ {result.remoteTicket.price}</p>
+          </Ticket>
+          {isNotRemote ? (
+            <>
+              <TitleSec>Ótimo! Agora escolha sua modalidade de hospedagem</TitleSec>
+              <Ticket
+                onClick={() => withOrWithoutHotel('Sem Hotel')}
+              >
+                <p className="type">Sem Hotel</p>
+                <p className="price">+ R$ 0</p>
+              </Ticket>
+              <Ticket
+                onClick={() => withOrWithoutHotel('Com Hotel')}
+              >
+                <p className="ticketType">Com Hotel</p>
+                <p className="ticketPrice">
+                  + R$ {result.ticketWithHotel.price - result.ticketWithoutHotel.price}
+                </p>
+              </Ticket>
+              {withoutHotel || withHotel ? (
+                <>
+                  <TitleSec>
+                    Fechado! O total ficou em <strong>R$ {ticketPrice}</strong>. Agora é só confirmar:
+                  </TitleSec>
+                  <Button onClick>
+                    RESERVAR INGRESSO
+                  </Button>
+                </>
+              ) : (
+                <></>
+              )}
+            </>
+          ) : remoteOptionClicked ? (
+            <>
+              <TitleSec>
+                Fechado! O total ficou em <strong>R$ {ticketPrice}</strong>. Agora é só confirmar:
+              </TitleSec>
+              <Button onClick>
+                RESERVAR INGRESSO
+              </Button>
+            </>
+          ) : (
+            <></>
+          )}
+        </>
+      )}
+    </>
+  );
+  
 }
+
+const Title = styled.h2 `
+  font-family: 'Roboto', sans-serif;
+  font-size: 40px;
+  color: black;
+  margin-bottom: 35px;
+
+`
+
+const TitleSec = styled.h3 `
+  font-family: 'Roboto', sans-serif;
+  font-size: 22px;
+  color: #8e8e8e;
+  margin-bottom: 22px;
+  margin-top: 32px;
  
+`
+const Button = styled.button `
+  font-family: 'Roboto', sans-serif;
+  font-size: 16px;
+  color: black;
+  background-color: #e0e0e0;
+  border: none;
+  padding: 11px 14px;
+  border-radius: 4px;
+  cursor: pointer;
+  &:disabled {
+    cursor: not-allowed;
+    opacity: 0.7;
+  }
+
+
+`
+const Ticket = styled.button `
+  font-family: 'Roboto', sans-serif;
+  height: 150px;
+  width: 150px;
+  margin-right: 27px;
+  background-color: white;
+  cursor: pointer;
+  border: 1px solid #cecece;
+  border-radius: 22px;
+
+  &:disabled {
+    cursor: not-allowed;
+    opacity: 0.8;
+  }
+
+  .type {
+    font-size: 18px;
+    color: #454545;
+  }
+
+  .price {
+    font-size: 16px;
+    color: #898989;
+  }
+
+
+`
+
