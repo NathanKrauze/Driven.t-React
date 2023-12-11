@@ -17,7 +17,7 @@ export default function useTypesOfTicket() {
     };
 }
 
-export default function postUserTicket() {
+export default function postUserTickets() {
     const token = useToken();
 
     const {
