@@ -2,7 +2,7 @@ import useToken from "../useToken";
 import useAsync from "../useAsync";
 import * as ticketsApi from '../../services/ticketApi';
 
-export default function useTypesOfTicket() {
+export function useTypesOfTicket() {
     const token = useToken();
 
     const {
@@ -17,7 +17,7 @@ export default function useTypesOfTicket() {
     };
 }
 
-export default function postUserTickets() {
+export function postUserTickets() {
     const token = useToken();
 
     const {
