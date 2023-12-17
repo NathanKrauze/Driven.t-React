@@ -2,22 +2,20 @@ import useToken from "../useToken";
 import useAsync from "../useAsync";
 import * as ticketsApi from '../../services/ticketApi';
 
-export default function useTypesOfTicket() {
+function useTypesOfTicket() {
     const token = useToken();
-
     const {
         data: typesOfTickets,
         act: getTypesOfTickets,
         
     } = useAsync(() => ticketsApi.getTypesOfTickets(token))
-
     return {
         typesOfTickets,
         getTypesOfTickets,
     };
 }
 
-export default function postUserTickets() {
+function postUserTickets() {
     const token = useToken();
 
     const {
@@ -29,4 +27,9 @@ export default function postUserTickets() {
     };
 }
 
+const hookTickets = {
+    useTypesOfTicket,
+    postUserTickets
+}
 
+export default hookTickets
