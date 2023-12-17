@@ -3,6 +3,7 @@ import ErrorMessage from "../../../components/ErrorMessage";
 import styled from 'styled-components';
 import useEnrollment from '../../../hooks/api/useEnrollment'
 import hookTickets from "../../../hooks/api/useTypesOfTicket";
+import axios from "axios";
 
 
 export default function Payment() {
@@ -78,7 +79,7 @@ let result = {};
     ...getPrice(typesOfTickets),
   };
 
- 
+
   return (
     <>
       <Title>Ingresso e pagamento</Title>
@@ -86,7 +87,7 @@ let result = {};
         'Loading...'
       ) : !enrollment ? (
         <ErrorMessage
-          error={'Para conseguir visualizar os ingressos, você deve completar sua inscrição'}
+          error={'Para conseguir visualizar os ingressos, você deve completar sua inscrição antes de prosseguir para escolha de ingresso'}
         />
       ) : !reserved ? (
         <>
