@@ -2,13 +2,13 @@ import { useState } from "react";
 import ErrorMessage from "../../../components/ErrorMessage";
 import styled from 'styled-components';
 import useEnrollment from '../../../hooks/api/useEnrollment'
-import {useTypesOfTicket} from "../../../hooks/api/useTypesOfTicket";
+import hookTickets from "../../../hooks/api/useTypesOfTicket";
 import axios from "axios";
 
 
 export default function Payment() {
- 
- const { typesOfTickets } = useTypesOfTicket()
+ const { typesOfTickets } = hookTickets.useTypesOfTicket()
+ //console.log(typesOfTickets)
  
 
  
@@ -18,6 +18,23 @@ export default function Payment() {
  const [withHotel, setWithHotel] = useState(false);
  const [withoutHotel, setWithoutHotel] = useState(false);
  const { enrollment, enrollmentLoading } = useEnrollment();
+ const [ reserved, setReserved ] = useState(false);
+
+ function reserve(){
+  setReserved(true);
+ }
+
+ function analyseTicket(){
+  if(isRemote){
+    return result.remoteTicket
+  }
+  if(isNotRemote && withHotel){
+    return result.ticketWithHotel
+  }
+  if(isNotRemote && withoutHotel){
+    return result.ticketWithoutHotel
+  }
+ }
 
 function selectRemoteorNot(type) {
   if (type === 'Presencial') {
@@ -46,11 +63,11 @@ function withOrWithoutHotel(type) {
 }
 
 function getPrice(typesOfTickets) {
-  const remoteTicket = typesOfTickets.find((ticketType) => ticketType.isRemote === true);
-  const ticketWithoutHotel = typesOfTickets.find(
+  const remoteTicket = typesOfTickets?.find((ticketType) => ticketType.isRemote === true);
+  const ticketWithoutHotel = typesOfTickets?.find(
     (ticketType) => ticketType.isRemote === false && ticketType.includesHotel === false
   );
-  const ticketWithHotel = typesOfTickets.find(
+  const ticketWithHotel = typesOfTickets?.find(
     (ticketType) => ticketType.isRemote === false && ticketType.includesHotel === true
   );
 
@@ -62,10 +79,6 @@ let result = {};
     ...getPrice(typesOfTickets),
   };
 
-function enrollTicket() {
-
-
-}
 
   return (
     <>
@@ -76,7 +89,7 @@ function enrollTicket() {
         <ErrorMessage
           error={'Para conseguir visualizar os ingressos, você deve completar sua inscrição antes de prosseguir para escolha de ingresso'}
         />
-      ) : (
+      ) : !reserved ? (
         <>
           <TitleSec>Primeiro, escolha sua modalidade de ingresso</TitleSec>
           <Ticket
@@ -104,7 +117,7 @@ function enrollTicket() {
                 onClick={() => withOrWithoutHotel('Com Hotel')}
               >
                 <p className="ticketType">Com Hotel</p>
-                <p className="ticketPrice">
+                <p className="price">
                   + R$ {result.ticketWithHotel.price - result.ticketWithoutHotel.price}
                 </p>
               </Ticket>
@@ -113,7 +126,7 @@ function enrollTicket() {
                   <TitleSec>
                     Fechado! O total ficou em <strong>R$ {ticketPrice}</strong>. Agora é só confirmar:
                   </TitleSec>
-                  <Button onClick= {() => enrollTicket()}>
+                  <Button onClick={reserve}>
                     RESERVAR INGRESSO
                   </Button>
                 </>
@@ -121,18 +134,28 @@ function enrollTicket() {
                 <></>
               )}
             </>
-          ) : remoteOptionClicked ? (
+          ) : isRemote ? (
             <>
               <TitleSec>
                 Fechado! O total ficou em <strong>R$ {ticketPrice}</strong>. Agora é só confirmar:
               </TitleSec>
-              <Button onClick>
+              <Button onClick={reserve}>
                 RESERVAR INGRESSO
               </Button>
             </>
           ) : (
             <></>
           )}
+        </>
+      ) : (
+        <>
+          <TitleSec>
+            Ingresso escolhido
+          </TitleSec>
+          <Resume>
+            <p className="type">{analyseTicket().name}</p>
+            <p className="price">R$ {analyseTicket().price}</p>
+          </Resume>
         </>
       )}
     </>
@@ -187,6 +210,28 @@ const Ticket = styled.button `
     opacity: 0.8;
   }
 
+  .type {
+    font-size: 18px;
+    color: #454545;
+  }
+
+  .price {
+    font-size: 16px;
+    color: #898989;
+  }
+
+
+`
+
+
+const Resume = styled.button `
+  font-family: 'Roboto', sans-serif;
+  height: 108px;
+  width: 290px;
+  margin-right: 27px;
+  background-color: #FFEED2;
+  border: none;
+  border-radius: 22px;
   .type {
     font-size: 18px;
     color: #454545;
