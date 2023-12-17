@@ -3,6 +3,7 @@ import ErrorMessage from "../../../components/ErrorMessage";
 import styled from 'styled-components';
 import useEnrollment from '../../../hooks/api/useEnrollment'
 import {useTypesOfTicket} from "../../../hooks/api/useTypesOfTicket";
+import axios from "axios";
 
 
 export default function Payment() {
@@ -61,7 +62,11 @@ let result = {};
     ...getPrice(typesOfTickets),
   };
 
- 
+function enrollTicket() {
+
+
+}
+
   return (
     <>
       <Title>Ingresso e pagamento</Title>
@@ -69,7 +74,7 @@ let result = {};
         'Loading...'
       ) : !enrollment ? (
         <ErrorMessage
-          error={'Para conseguir visualizar os ingressos, você deve completar sua'}
+          error={'Para conseguir visualizar os ingressos, você deve completar sua inscrição antes de prosseguir para escolha de ingresso'}
         />
       ) : (
         <>
@@ -108,7 +113,7 @@ let result = {};
                   <TitleSec>
                     Fechado! O total ficou em <strong>R$ {ticketPrice}</strong>. Agora é só confirmar:
                   </TitleSec>
-                  <Button onClick>
+                  <Button onClick= {() => enrollTicket()}>
                     RESERVAR INGRESSO
                   </Button>
                 </>
