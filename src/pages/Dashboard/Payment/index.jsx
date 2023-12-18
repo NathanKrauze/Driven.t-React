@@ -1,13 +1,16 @@
-import { useState } from "react";
+import { useState, useContext} from "react";
 import ErrorMessage from "../../../components/ErrorMessage";
 import styled from 'styled-components';
 import useEnrollment from '../../../hooks/api/useEnrollment'
 import hookTickets from "../../../hooks/api/useTypesOfTicket";
+import { usePaymentContext } from "../../../contexts/PaymentContext";
 
 
 export default function Payment() {
  const { typesOfTickets } = hookTickets.useTypesOfTicket()
  //console.log(typesOfTickets)
+
+ const { setIsOnlineMode } = usePaymentContext();
  
 
  
@@ -39,12 +42,14 @@ function selectRemoteorNot(type) {
   if (type === 'Presencial') {
     setIsNotRemote(true);
     setIsRemote(false); 
+    setIsOnlineMode(false);
   } 
 
   if (type === 'Online') {
     setIsNotRemote(false);
     setIsRemote(true)
     setTicketPrice(result.remoteTicket.price)
+    setIsOnlineMode(true);
   }
 }
 
