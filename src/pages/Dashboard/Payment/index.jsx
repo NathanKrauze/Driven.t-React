@@ -91,7 +91,7 @@ let result = {};
         'Loading...'
       ) : !enrollment ? (
         <ErrorMessage
-          error={'Para conseguir visualizar os ingressos, você deve completar sua inscrição antes de prosseguir para escolha de ingresso'}
+          error={'Para conseguir visualizar os ingressos, você deve completar sua inscrição.'}
         />
       ) : !reserved ? (
         <>
