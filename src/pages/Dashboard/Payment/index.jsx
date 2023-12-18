@@ -218,7 +218,7 @@ const Ticket = styled.button `
     font-size: 16px;
     color: #898989;
   }
-
+//payment
 
 `
 
