@@ -3,7 +3,6 @@ import ErrorMessage from "../../../components/ErrorMessage";
 import styled from 'styled-components';
 import useEnrollment from '../../../hooks/api/useEnrollment'
 import hookTickets from "../../../hooks/api/useTypesOfTicket";
-import axios from "axios";
 
 
 export default function Payment() {
