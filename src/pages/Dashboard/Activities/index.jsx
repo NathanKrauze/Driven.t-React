@@ -12,8 +12,7 @@ export default function Activities() {
 
   const { isOnlineMode } = usePaymentContext();
 
-
-  if(ticket?.status !== 'PAID' && isOnlineMode == true) {
+  if(ticket?.status === 'PAID' && isOnlineMode) {
     return (
       <>
         <Title>Escolha de Atividades</Title>
@@ -31,12 +30,13 @@ export default function Activities() {
         Você precisa ter confirmado o pagamento antes de fazer a escolha das atividades
         </CentralWarning>
       </>)
+  }else{
+    return (
+      <>
+        Atividades: Em breve!
+      </>
+    )
   }
-  return (
-    <>
-      Atividades: Em breve!
-    </>
-  )
 }
 
 
